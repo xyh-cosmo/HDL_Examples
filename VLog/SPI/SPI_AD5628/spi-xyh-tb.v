@@ -13,7 +13,7 @@ module CLK_DIV_TB();
     reg[15:0] din1;
 	wire cs0, cs1, cs2,cs3;
 
-	parameter clk_div = 32;
+	parameter clk_div = 16;
 
 	CLK_DIV 
 		#(
@@ -89,6 +89,11 @@ module CLK_DIV_TB();
 	end
 
 	initial begin
+		en0 = 0;
+		en1 = 0;
+		en2 = 0;
+		en3 = 0;
+
         din0[31:0] <= 32'b10101010101010101010101010101010;
         // din0[31:0] <= 32'bxxxx1010101010101010101010101010;
         din1[15:0] <= 16'b1010101010101010;
@@ -101,7 +106,9 @@ module CLK_DIV_TB();
 		#5;
 		rst = ~rst;
 
-		#4500;
+		#5 en0 = 1;
+
+		#2500;
 		$finish;
 	end
 
