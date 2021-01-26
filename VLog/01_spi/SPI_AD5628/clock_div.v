@@ -32,17 +32,18 @@ module CLOCK_DIV
 			cycle_cnt	<= 32'd0;
 		end
 		else begin
-			if( cycle_cnt >= CYCLES_MAX*2 )
-				status_r	<= 1'b1;
-		end
-		else begin
 			clk_cnt <= clk_cnt + 8'd1;
 			
-			if( clk_cnt >= clk_cnt_max-1 ) begin
+			if( clk_cnt >= clk_cnt_max-1 && status_r == 1'b0 ) begin
 				clk_div_r	<= ~clk_div_r;
 				clk_cnt		<= 8'd0;
 				cycle_cnt	<= cycle_cnt + 32'd1;
-			end	
+			end
+
+			if( CYCLES_MAX > 0 ) begin
+				if( cycle_cnt >= CYCLES_MAX*2 )
+					status_r	<= 1'b1;
+			end
 		end
 	end
 

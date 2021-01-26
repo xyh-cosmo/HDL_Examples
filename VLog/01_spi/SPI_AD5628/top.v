@@ -10,7 +10,7 @@
 
 module TOP(
 	input clk_sys,
-	input rst_sys,
+	// input rst_sys,
 
 	//	SPI outputs
 	output sclk,
@@ -19,9 +19,60 @@ module TOP(
 	output A1,
 	output cs,
 
-	//  squre waves, which can also be viewed as clock signals
+	//  square waves, which can also be viewed as a clock signal
 	output sq_wave
 	);
+
+//  clocks
+    wire clk_150M;
+    wire clk_50M;
+    wire clk_25M;
+    wire clk_10M;
+    wire clk_5M;
+    wire clk_locked;
+
+    my_clk_generator  my_clock (
+        // Clock out ports  
+        .clk_150M(clk_150M),
+        .clk_50M(clk_50M),
+        .clk_25M(clk_25M),
+        .clk_10M(clk_10M),
+        .clk_5M(clk_5M),
+        // Status and control signals               
+        .locked(clk_locked),
+        // Clock in ports
+        .clk_in1(sys_clk)
+        );
+
+//	用PL按键的触发来模拟reset
+    reg state_pl_key        = 1'b0;
+    reg state_pl_key_bak    = 1'b0;      
+    always@( negedge PL_KEY ) begin
+        state_pl_key <= ~state_pl_key;
+    end
+    
+    (*mark_debug="true"*)reg rst_w;
+    reg [31:0] rst_cn = 32'd0;
+    localparam rst_start = 32'd1000000;
+
+
+    always@(posedge sys_clk) begin
+        if( state_pl_key != state_pl_key_bak ) begin
+            if( rst_cn < rst_start ) begin
+                rst_w <= 1'b0;
+                rst_cn <= rst_cn + 32'd1;
+            end
+            else if( rst_cn < rst_start+10 ) begin
+                rst_w <= 1'b1;
+                rst_cn <= rst_cn + 32'd1;
+            end
+            else if( rst_cn >= rst_start + 10 ) begin
+                rst_w <= 1'b0;
+                rst_cn <= 32'd0;
+                state_pl_key_bak <= ~state_pl_key_bak;
+            end
+        end
+    end
 
 	//	states of the STATE MACHINE
 	reg[3:0] state;
@@ -31,13 +82,16 @@ module TOP(
 
 	reg en_spi = 1'b0;
 	reg en_sq  = 1'b0;
+	reg spi_done = 1'b0;
+	reg sq_done  = 1'b0;
 
 	wire spi_status;
 	wire sq_status;
 
 	SPI_CONTROL spi_control(
 		.clk(clk_sys),
-		.rst(rst_sys),
+		// .rst(rst_sys),
+		.rst(rst_w),
 		.en(en_spi),
 		.sclk(sclk),
 		.mosi(mosi),
@@ -49,8 +103,10 @@ module TOP(
 
 	CLOCK_DIV
 		#(
-			.DIV_FACTOR(25),
-			.CNT_START(0)
+			.DIV_FACTOR(50),
+			.CNT_START(0),
+			// .CYCLES_MAX(20)
+			.CYCLES_MAX(0)
 		)
 		clk_div
 		(
@@ -60,8 +116,8 @@ module TOP(
 			.status(sq_status)
 		);
 
-	always@( posedge clk_sys or rst_sys ) begin
-		if( rst_sys ) begin
+	always@( posedge clk_sys or posedge rst_w ) begin
+		if( rst_w ) begin
 			state	<= S_IDLE;
 			en_spi	<= 1'b0;
 			en_sq	<= 1'b0;
@@ -70,25 +126,22 @@ module TOP(
 			case( state )
 				S_IDLE:
 				begin
-					if( en_spi == 1'b0 && spi_status == 1'b0 ) begin
+					if( spi_status == 1'b0 && spi_done == 1'b0 ) begin
 						en_spi	<= 1'b1;
 						state	<= S_SPI;
 					end
-/*
-					else if( en_sq == 1'b0 and sq_status == 1'b0 ) begin
-						en_sq	<= 1'b1;
-						state	<= S_SQ;
-					end
-					else
-						state <= S_IDLE;
-*/
 				end
 
 				S_SPI:
 				begin
 					if( spi_status == 1'b1 ) begin
 						en_spi	<= 1'b0;
-						state	<= S_SQ;
+						spi_done <= 1'b1;
+
+						if( sq_status == 1'b0 && sq_done == 1'b0 ) begin
+							en_sq   <= 1'b1;
+							state	<= S_SQ;
+						end
 					end
 				end
 
@@ -96,6 +149,7 @@ module TOP(
 				begin
 					if( sq_status == 1'b1 ) begin
 						en_sq	<= 1'b0;
+						sq_done <= 1'b1;
 						state	<= S_IDLE;
 					end
 				end

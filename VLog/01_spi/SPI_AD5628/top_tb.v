@@ -12,19 +12,23 @@ module TOP_TB();
 
 	reg clk_sys_50M;
 	reg rst_sys;
+
 	wire sclk;
 	wire mosi;
 	wire cs;
-	wire A0,A1;
+	wire A0;
+	wire A1;
+	wire sq_wave;
 
 	TOP top(
-		.clk_sys(clk_sys),
+		.clk_sys(clk_sys_50M),
 		.rst_sys(rst_sys),
 		.sclk(sclk),
 		.mosi(mosi),
-		.cs(cs),
 		.A0(A0),
-		.A1(A1)
+		.A1(A1),
+		.cs(cs),
+		.sq_wave(sq_wave)
 		);
 
 
@@ -43,15 +47,16 @@ module TOP_TB();
 		#5;
 		rst_sys = ~rst_sys;
 
-		#10000;
+		#170000;
 
+		$finish;
 	end
 
 
 	// generate the system clock: clk_sys, f = 50MHz
 	initial begin
 		clk_sys_50M = 0;
-		forever #1 clk_sys_50M = ~clk_sys_50M;
+		forever #10 clk_sys_50M = ~clk_sys_50M;
 	end
 
 endmodule

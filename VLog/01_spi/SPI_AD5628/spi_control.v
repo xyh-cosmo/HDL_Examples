@@ -27,7 +27,7 @@ module SPI_CONTROL(
 
 //	状态机：
 	parameter SPI_IDLE		= 4'd0;
-	parameter SPI_RESET	= 4'd1;
+	parameter SPI_RESET		= 4'd1;
 	parameter SPI_SEND		= 4'd2;
 	parameter SPI_FINISHED	= 4'd3;
 
@@ -98,6 +98,7 @@ module SPI_CONTROL(
 						status_r	<= 1'b0;
 					end
 					else begin
+						state       <= SPI_IDLE;
 						status_r	<= 1'b1;
 					end
 				end
