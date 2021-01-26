@@ -1,5 +1,14 @@
 `timescale 1ns / 1ps
 
+`ifndef _DEBUG_
+	`define _DEBUG_
+`endif
+
+`include "../spi_base.v"
+`include "../spi_control.v"
+`include "../clock_div.v"
+`include "./top.v"
+
 //	Created @2021-01-26
 //	Author: Youhua Xu
 //	
@@ -47,7 +56,7 @@ module TOP_TB();
 		#5;
 		rst_sys = ~rst_sys;
 
-		#170000;
+		#100000;
 
 		$finish;
 	end
