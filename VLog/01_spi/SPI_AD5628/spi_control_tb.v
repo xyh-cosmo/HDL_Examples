@@ -21,7 +21,7 @@ module SPI_SM_TB();
 		);
 
 	initial begin
-		$dumpfile("wave-sm.vcd");
+		$dumpfile("wave.vcd");
 		$dumpvars(0,SPI_SM_TB);
 	end
 
@@ -32,7 +32,7 @@ module SPI_SM_TB();
 		#5;
 		rst = ~rst;
 
-		#6000;
+		#10000;
 
 		// rst = 0;
 		// #10;

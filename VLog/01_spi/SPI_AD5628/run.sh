@@ -1,4 +1,4 @@
 #!/bin/bash
 
-iverilog -o spi-sm spi-xyh.v spi_state_machine.v spi-xyh-sm-tb.v
-vvp spi-sm
+iverilog -o spi-tb spi_base.v spi_control.v spi_control_tb.v
+vvp spi-tb
