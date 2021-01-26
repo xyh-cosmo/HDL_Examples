@@ -1,15 +1,19 @@
 `timescale 1ns / 1ps
 
-module SPI_SM(
+module SPI_CONTROL(
 		input clk,    // 50M
 		input rst,
+		input en,
 		(*mark_debug="true"*)output sclk,
 		(*mark_debug="true"*)output mosi,
 		(*mark_debug="true"*)output cs,
 	
 	// 输出译码器CD74HC所需要的输入信号
 		(*mark_debug="true"*) output    A0,
-		(*mark_debug="true"*) output    A1
+		(*mark_debug="true"*) output    A1,
+
+	// when all configurations are finished, change status to 1
+		(*mark_debug="true"*) output	status
 	);
 
 	wire finished;
@@ -23,7 +27,7 @@ module SPI_SM(
 
 //	状态机：
 	parameter SPI_IDLE		= 4'd0;
-	parameter SPI_RESET	= 4'd1;
+	parameter SPI_RESET		= 4'd1;
 	parameter SPI_SEND		= 4'd2;
 	parameter SPI_FINISHED	= 4'd3;
 
@@ -64,10 +68,12 @@ module SPI_SM(
 			.finished(finished)
 		);
 
-    
+    reg status_r = 1'b0;
+	assign status = status_r;
+
 //	状态机
 	always @(posedge clk or posedge rst) begin
-		if (rst) begin
+		if (rst || en==1'b0 ) begin
 			// reset
 			state		    <= SPI_IDLE;
 			en_r		    <= 0;
@@ -76,7 +82,7 @@ module SPI_SM(
 
 			SPI_DATA_OPT	<= 4'b0;
 			SPI_SEND_DONE   <= 4'b0;
-			
+			status_r		<= 1'b0;
 		end
 		else begin
 			case(state)
@@ -89,6 +95,11 @@ module SPI_SM(
                         en_r		<= 0;
                         reset_r		<= 0;
                         reset_cnt	<= 8'b0;
+						status_r	<= 1'b0;
+					end
+					else begin
+						state       <= SPI_IDLE;
+						status_r	<= 1'b1;
 					end
 				end
 				
@@ -126,8 +137,8 @@ module SPI_SM(
                     	// 3)
                     	4'b0010:   //  开启DAC所有通道，对所有DAC通道上电
                     	begin
-//                    		spi_data_r 	<= 32'b1111_0110_0000_0000_0000_0000_1111_1111;
-                    		spi_data_r 	<= 32'b1111_0110_0000_0000_0000_0000_0000_0000;
+                    		spi_data_r 	<= 32'b1111_0110_0000_0000_0000_0000_1111_1111;
+//                    		spi_data_r 	<= 32'b1111_0110_0000_0000_0000_0000_0000_0000;
                     	end
 
                     	//###############################################################
@@ -143,7 +154,8 @@ module SPI_SM(
                     	// 5)
                         4'b0100:   //  设置通道B输出电压值0.357V
                         begin
-                            spi_data_r  <= 32'b1111_0011_0000_0001_0010_0100_0000_0000;
+//                            spi_data_r  <= 32'b1111_0011_0001_0001_0010_0100_0000_0000;
+                            spi_data_r  <= 32'b1111_0011_0001_0000_0000_0000_0000_0000;
                         end
 
                         // 6)
@@ -152,37 +164,39 @@ module SPI_SM(
                         	// 正常电压 4.25V
                             // spi_data_r     <= 32'b1111_0011_0000_1101_1001_1001_0000_0000;
                             // 测试电压 2.0V
-                            spi_data_r  <= 32'b1111_0011_0000_0110_0110_0110_0000_0000;
+//                            spi_data_r  <= 32'b1111_0011_0010_0110_0110_0110_0000_0000;
+                            // 测试电压4.0V
+                            spi_data_r  <= 32'b1111_0011_0010_1100_1100_1100_0000_0000;
                         end
 
                         // 7)
                         4'b0110:   //  设置通道D输出电压值0.833V
                         begin
-                            spi_data_r  <= 32'b1111_0011_0000_0010_1010_1010_0000_0000;
+                            spi_data_r  <= 32'b1111_0011_0011_0010_1010_1010_0000_0000;
                         end
 
                         // 8)
                         4'b0111:	// 设置通道E输出电压值2.5V（测试）
                         begin
-                        	spi_data_r  <= 32'b1111_0011_0000_1000_0000_0000_0000_0000;
+                        	spi_data_r  <= 32'b1111_0011_0100_1000_0000_0000_0000_0000;
                         end
 
                         // 9)
                         4'b1000:	// 设置通道F输出电压值2.5V（测试）
                         begin
-                        	spi_data_r  <= 32'b1111_0011_0000_1000_0000_0000_0000_0000;
+                        	spi_data_r  <= 32'b1111_0011_0101_1000_0000_0000_0000_0000;
                         end
 
                         // 10)
                         4'b1001:	// 设置通道G输出电压值2.5V（测试）
                         begin
-                        	spi_data_r  <= 32'b1111_0011_0000_1000_0000_0000_0000_0000;
+                        	spi_data_r  <= 32'b1111_0011_0110_1000_0000_0000_0000_0000;
                         end
 
                         // 11)
                         4'b1010:	// 设置通道H输出电压值1.0V
                         begin
-                        	spi_data_r  <= 32'b1111_0011_0000_0011_0011_0011_0000_0000;
+                        	spi_data_r  <= 32'b1111_0011_0111_0011_0011_0011_0000_0000;
                         end
                     endcase
 				end

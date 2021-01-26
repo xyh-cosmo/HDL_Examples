@@ -62,7 +62,6 @@ module SPI_BASE // 模块名称需要修改！！！
 
         	d_cnt        <= DATAWIDTH;
 			cs_r         <= 1'b0;
-		//  对AD5628而言，译码器A0、A1都设置为1之后，片选信号拉低
 			A0_r         <= 1'b1;
 			A1_r         <= 1'b1;
 			finished     <= 1'b0;
