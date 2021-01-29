@@ -1,4 +1,14 @@
+// Created@2021-01-26
+// Author: Youhua Xu
+
 `timescale 1ns / 1ps
+
+// This module generates divided clocks, with frequencies determined by the
+// parameter "DIV_FACTOR".
+// 
+// In the inputs, a signal called "en" is used to enable this module:
+//	if en==1, the output clock "clk_div" behaves like the usual clocks;
+//	if en==0, the output clock "clk_div" would be either 1 or 0.
 
 module CLOCK_DIV
 	#(

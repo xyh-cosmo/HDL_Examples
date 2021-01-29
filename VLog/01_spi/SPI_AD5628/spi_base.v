@@ -1,8 +1,13 @@
+//	Created@2021-01-26
+//	Author: Youhua Xu
+
 `timescale 1ns / 1ps
 
 // SPI Master (不含MISO)
 // NOTE:数据时钟频率是SCLK的一半，计数器一定要数清楚！
 // TODO：进行规范化，改为每次发送固定长度的bit数（8位）
+// Note added @2021-01-26: 作为“基模块”，还是设计成可以发送任意长度bits比较好，
+// 这样一来在更高一层的模块中可以更加灵活地进行实例化。
 
 module SPI_BASE // 模块名称需要修改！！！
 	#(

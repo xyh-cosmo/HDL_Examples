@@ -8,6 +8,7 @@
 //	2) after AD5628 been configured, start to send square waves (f=1MHz) to DG636
 //	   
 
+// These directives can also be placed in top_tb.v
 `ifndef _DEBUG_
 	`define _DEBUG_
 `endif
