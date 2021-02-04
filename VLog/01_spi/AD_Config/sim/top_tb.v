@@ -5,7 +5,7 @@
 `endif
 
 `include "../spi_base.v"
-`include "../spi_control.v"
+`include "../spi_ad5628.v"
 `include "../clock_div.v"
 `include "./top.v"
 

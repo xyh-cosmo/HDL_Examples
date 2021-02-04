@@ -1,5 +1,7 @@
 //	Created@2021-01-26
 //	Author: Youhua Xu
+//
+
 
 `timescale 1ns / 1ps
 
@@ -9,13 +11,14 @@
 // Note added @2021-01-26: 作为“基模块”，还是设计成可以发送任意长度bits比较好，
 // 这样一来在更高一层的模块中可以更加灵活地进行实例化。
 
-module SPI_BASE // 模块名称需要修改！！！
+module SPI_BASE
 	#(
 		parameter DATAWIDTH = 32,			// SPI数据宽度
 		parameter CNT_WIDTH	= 8,			// 计数器宽度
         parameter CPOL      = 0,			// 时钟极性
         parameter CPHA      = 1,			// 时钟相位
-        parameter CLKDIV    = 16			// 时钟分频倍率
+        parameter CLKDIV    = 16,			// 时钟分频倍率
+		parameter SPINAME	= SPI_DEFAULT	// SPI_DEFAULT = SPI_AD5628
 	)
 	(
     //  inputs:
@@ -45,6 +48,14 @@ module SPI_BASE // 模块名称需要修改！！！
 	reg[7:0]	delay_cnt;
 	reg			sclk_rdy;
 
+//	SPI device names:
+	parameter SPI_AD5628	= 4'd1;
+	parameter SPI_AD9106	= 4'd2;
+	parameter SPI_2271A		= 4'd3;
+	parameter SPI_2271B		= 4'd4;
+	parameter SPI_DEFAULT	= SPI_AD5628;
+	reg[3:0]	spi_name 	= SPINAME;
+
 //	将输出引脚信号连接到对应的内部寄存器
 	assign dout     = dout_r;
 	assign sclk     = sclk_r;
@@ -67,9 +78,44 @@ module SPI_BASE // 模块名称需要修改！！！
 
         	d_cnt        <= DATAWIDTH;
 			cs_r         <= 1'b0;
-			A0_r         <= 1'b1;
-			A1_r         <= 1'b1;
+//			A0_r         <= 1'b1;
+//			A1_r         <= 1'b1;
 			finished     <= 1'b0;
+
+			// case(spi_name)
+			case(SPINAME)
+				SPI_AD5628:
+				begin
+					A0_r	<= 1'b1;
+					A1_r	<= 1'b1;
+				end
+
+				SPI_AD9106:
+				begin
+					A0_r	<= 1'b1;
+					A1_r	<= 1'b0;
+				end
+
+				SPI_2271A:
+				begin
+					A0_r	<= 1'd0;
+					A1_r	<= 1'd1;
+				end
+
+				SPI_2271B:
+				begin
+					A0_r	<= 1'd0;
+					A1_r	<= 1'd0;
+				end
+
+				default:
+				begin
+				//	enable AD5628 by default ...
+					A0_r	<= 1'b1;
+					A1_r	<= 1'b1;
+				end
+			endcase
+
 		end
 		else begin
 			if(en == 1) begin

@@ -13,6 +13,8 @@
 	`define _DEBUG_
 `endif
 
+`include "../defs.v"
+
 module TOP(
 	input clk_sys,
 
@@ -99,7 +101,7 @@ module TOP(
 	wire spi_status;
 	wire sq_status;
 
-	SPI_CONTROL spi_control(
+	SPI_AD5628 spi_ad5628(
 		.clk(clk_sys),
 `ifdef _DEBUG_		
 		.rst(rst_sys),

@@ -1,0 +1,103 @@
+需要配置的寄存器
+
+*1) SPI Control Register (SPICONFIG)
+011
+
+*2) Power Status Register (POWERCONFIG)
+Page-28
+
+*3) Clock Control Register (CLOCKCONFIG)
+
+*4) Reference Resistor Register (REFADJ) 直接设为0
+
+
+#5) DAC4 Analog Gain Register (DAC4AGAIN)
+#6) DAC3 Analog Gain Register (DAC3AGAIN)
+#7) DAC2 Analog Gain Register (DAC2AGAIN)
+#8) DAC1 Analog Gain Register (DAC1AGAIN)
+
+#9) DAC Analog Gain Range Register (DACxRANGE)
+
+#10) FSADJ4 Register (DAC4RSET)
+#11) FSADJ3 Register (DAC3RSET)
+#12) FSADJ2 Register (DAC2RSET)
+#13) FSADJ1 Register (DAC1RSET)
+
+#14) Calibration Register (CALCONFIG)
+
+#15) Comp Offset Register (COMPOFFSET)
+
+*16) Update Pattern Register (RAMUPDATE)
+*17) Command/Status Register (PAT_STATUS)
+*18) Command/Status Register (PAT_TYPE)
+
+*19) Trigger Start to Real Pattern Delay Register (PATTERN_DLY)
+
+// 以下偏置量全部设为0
+*20) DCA4 Digital Offset Register (DAC4DOF)
+*21) DCA3 Digital Offset Register (DAC3DOF)
+*22) DCA2 Digital Offset Register (DAC2DOF)
+*23) DCA1 Digital Offset Register (DAC1DOF)
+
+*24) Wave3/Wave4 Select Register (WAV4_3CONFIG)
+*25) Wave1/Wave2 Select Register (WAV2_1CONFIG)
+
+*26) DAC Time Control Register (PAT_TIMEBASE)
+*27) Pattern Period Register (PAT_PERIOD)
+
+*28) DAC3/DAC4 Pattern Repeat Cycles Register (DAC4_3PATx)
+*29) DAC1/DAC2 Pattern Repeat Cycles Register (DAC2_1PATx)
+
+#30) Trigger Start to DOUT Signal Register (DOUT_START)
+#31) DOUT Configuration Register (DOUT_CONFIG)
+
+#32) DAC4 Constant Value Register (DAC4_CST)
+#33) DAC3 Constant Value Register (DAC3_CST)
+#34) DAC2 Constant Value Register (DAC2_CST)
+#35) DAC1 Constant Value Register (DAC1_CST)
+
+*36) DAC4 Digital Gain Register (DAC4_DGAIN)
+*37) DAC3 Digital Gain Register (DAC3_DGAIN)
+*38) DAC2 Digital Gain Register (DAC2_DGAIN)
+*39) DAC1 Digital Gain Register (DAC1_DGAIN)
+
+#40) DAC3/DAC4 Sawtooth Configuration Register (SAW4_3CONFIG)
+#41) DAC1/DAC2 Sawtooth Configuration Register (SAW2_1CONFIG)
+
+#42) DDS Tuning Word MSB Register (DDS_TW32)
+#43) DDS Tuning Word LSB Register (DDS_TW1)
+
+#44) DDS4 Phase Offset Register (DDS4_PW)
+#45) DDS3 Phase Offset Register (DDS3_PW)
+#46) DDS2 Phase Offset Register (DDS2_PW)
+#47) DDS1 Phase Offset Register (DDS1_PW)
+
+*48) Pattern Control 1 Register (TRIG_TW_SEL)
+#49) Pattern Control 2 Register (DDSx_CONFIG)
+
+#50) TW_RAM_CONFIG Register (TW_RAM_CONFIG)
+
+*51) Start Delay4 Register (START_DLY4)
+*52) Start Address4 Register (START_ADDR4)
+*53) Stop Address4 Register (STOP_ADDR4)
+#54) DDS Cycle4 Register (DDS_CYC4)
+
+*55) Start Delay3 Register (START_DLY3)
+*56) Start Address3 Register (START_ADDR3)
+*57) Stop Address3 Register (STOP_ADDR3)
+#58) DDS Cycle3 Register (DDS_CYC3)
+
+*59) Start Delay2 Register (START_DLY2)
+*60) Start Address2 Register (START_ADDR2)
+*61) Stop Address2 Register (STOP_ADDR2)
+#62) DDS Cycle2 Register (DDS_CYC2)
+
+*63) Start Delay1 Register (START_DLY1)
+*64) Start Address1 Register (START_ADDR1)
+*65) Stop Address1 Register (STOP_ADDR1)
+#66) DDS Cycle1 Register (DDS_CYC1)
+
+67) CFG_Error Register (CFG_ERROR) // 只读寄存器，保存的内容是配置的参数出现的错误
+
+*68) SRAM Data Register (SRAM_DATA)
+

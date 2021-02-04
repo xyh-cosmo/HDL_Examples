@@ -1,20 +1,42 @@
 `timescale 1ns / 1ps
 
-module SPI_CONTROL(
+//	Created@2021-01-29
+//	Author: Youhua Xu
+//	This module is written to write wave form data into the on-chip SRAM.
+//
+//	SPI configuration:
+//	CPOL = 1
+//	CPHA = 1
+
+// parameter SPI_AD5628	= 4'd1;
+// parameter SPI_AD9106	= 4'd2;
+// parameter SPI_2271A		= 4'd3;
+// parameter SPI_2271B		= 4'd4;
+// parameter SPI_DEFAULT	= SPI_AD5628;
+
+`include "defs.v"
+
+module SPI_AD9106_SRAM(
 		input clk,    // 50M
 		input rst,
 		input en,
-		(*mark_debug="true"*)output sclk,
-		(*mark_debug="true"*)output mosi,
-		(*mark_debug="true"*)output cs,
+		
+	//	输出用于AD9106配置的信号
+		output sclk,
+		output mosi_1,
+		output mosi_2;
+		output cs,
 	
 	// 输出译码器CD74HC所需要的输入信号
-		(*mark_debug="true"*) output    A0,
-		(*mark_debug="true"*) output    A1,
+		output A0,
+		output A1,
 
 	// when all configurations are finished, change status to 1
-		(*mark_debug="true"*) output	status
+		output status
 	);
+
+//	SPI device name:
+	parameter SPI_AD9106	= 4'd2;
 
 	wire finished;
 
@@ -22,8 +44,7 @@ module SPI_CONTROL(
     wire[31:0] din_w;
     assign din_w 			= spi_data_r;
 
-	parameter clk_div 		= 5;  // 对应频率为50M/5/2=5M   
-//    parameter clk_div 		= 2;  // 注意：设置成2只是为了测试
+	parameter clk_div 		= 5;  // 对应频率为50M/5/2=5M
 
 //	状态机：
 	parameter SPI_IDLE		= 4'd0;
@@ -33,7 +54,6 @@ module SPI_CONTROL(
 
 	reg[3:0] SPI_DATA_OPT;
 	reg[3:0] SPI_SEND_DONE;  	// 确保发送完成之后状态机的工作状态停止跳转
-	// parameter SPI_SEND_DONE_MAX	= 4'd7;	//	最多发送7个32bit数据
 	parameter SPI_SEND_DONE_MAX = 4'd11;	// 发送11次32bit数据
 
 	reg[3:0] state;			// defailt: SPI_IDLE
@@ -48,10 +68,11 @@ module SPI_CONTROL(
 			.DATAWIDTH(32),	// 需要修改一下，与要发送的数据位数保持一致
 			.CNT_WIDTH(8),
             .CLKDIV(clk_div),
-            .CPHA(0),
-            .CPOL(1)
+            .CPHA(1),
+            .CPOL(1),
+            .SPINAME(SPI_AD9106)
 		)
-		spi0 (
+		spi (
 			.clk(clk),
 			// .rst(rst),
 			.rst(reset_r),   // 之前这里连接的是系统的rst信号，所以工作流程没能按照预期的方式实现
