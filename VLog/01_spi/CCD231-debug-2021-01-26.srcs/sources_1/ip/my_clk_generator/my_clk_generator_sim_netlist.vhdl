@@ -1,10 +1,10 @@
 -- Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2017.4 (lin64) Build 2086221 Fri Dec 15 20:54:30 MST 2017
--- Date        : Thu Jan 21 15:32:58 2021
+-- Date        : Wed Jan 27 10:49:48 2021
 -- Host        : apple running 64-bit Ubuntu 20.04.1 LTS
 -- Command     : write_vhdl -force -mode funcsim
---               /home/xyh/NFS_Alinx/new-spi-demo/new-spi-demo.srcs/sources_1/ip/my_clk_generator/my_clk_generator_sim_netlist.vhdl
+--               /home/xyh/NFS_Alinx/VivadoProjects/CCD231-debug-2021-01-26/CCD231-debug-2021-01-26.srcs/sources_1/ip/my_clk_generator/my_clk_generator_sim_netlist.vhdl
 -- Design      : my_clk_generator
 -- Purpose     : This VHDL netlist is a functional simulation representation of the design and should not be modified or
 --               synthesized. This netlist cannot be used for SDF annotated simulation.
