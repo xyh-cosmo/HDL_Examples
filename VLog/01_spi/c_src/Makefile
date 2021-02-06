@@ -24,8 +24,8 @@ vpath .base build
 
 INCLUDES = -I $(MDIR)/include
 
-# CC			= arm-linux-gnueabihf-gcc
-CC			= gcc
+CC			= arm-linux-gnueabihf-gcc
+#CC			= gcc
 CCFLAG  	= -Wall
 OPTFLAG		= #-O2 #-ffast-math #( not recognized by intel compiler )
 LIBS		= #-lgsl -lgslcblas -lm
@@ -50,7 +50,7 @@ endif
 	cd $(WRKDIR);$(CC) $(OMPFLAG) $(OPTFLAG) $(CCFLAG) $(INCLUDES) -c ../$< -o $*.o
 
 MAIN 	= ConfigAD5628.o
-DEPS	= common.o
+DEPS	= common.o adc.o spi.o
 
 all: ad5628
 

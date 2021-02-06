@@ -6,10 +6,16 @@
 #include <termios.h>
 #include <sys/mman.h>
 #include <math.h>
+
+#include "common.h"
+#include "spi.h"
 #include "adc.h"
 
+// SPI settings
 #define CPOL 1
 #define CPHA 0
+#define A0 0
+#define A1 0
 #define SPI_DATA_NUM 11
 
 int ad5628_data[11] = {
@@ -30,7 +36,7 @@ int main(){
 	
 //	step 1: setup SPI configuration & SPI data
 	SPI_CONFIG *spi_config = (SPI_CONFIG*)malloc(sizeof(SPI_CONFIG));
-	setup_SPI(spi_config, CPOL, CPHA, "AD5628");
+	setup_SPI(spi_config, CPOL, CPHA, A0, A1, "AD5628");
 
 	SPI_DATA *spi_data = (SPI_DATA*)malloc(sizeof(SPI_DATA));
 	spi_data_alloc(spi_data, SPI_DATA_NUM);
@@ -46,28 +52,29 @@ int main(){
 
 //	step 2: create pointers
 	int fd = open("/dev/mem", O_RDWR | O_SYNC);
-	unsigned int *ptr1 = mmap(NULL, 10, PROT_READ | PROT_WRITE, MAP_SHARED, fd, BaseAddr1);
-	unsigned int *ptr2 = mmap(NULL, 10, PROT_READ | PROT_WRITE, MAP_SHARED, fd, BaseAddr2);
+	uint *ptr1 = mmap(NULL, 10, PROT_READ | PROT_WRITE, MAP_SHARED, fd, ADDR_GPIO_OUT);
+	uint *ptr2 = mmap(NULL, 10, PROT_READ | PROT_WRITE, MAP_SHARED, fd, ADDR_GPIO_IN);
 
-	unsigned int *gpio 		= ptr1;
-	unsigned int *gpio2		= ptr1+2;
-	unsigned int *gpio_in	= ptr2;
-
-
-//	step 2: send a pluse to PL side
+	uint *gpio_reg 		= ptr1;		// 0x41200000
+	uint *gpio2_reg		= ptr1+2;	// 0x41200008
+	uint *gpio_in_reg	= ptr2;		// 0x41210000
 
 
-//	step 3: check PL response
-	while(1){
-		int pl_status = get_bit(gpio_in,0);
-
-	}
+//	step 2: send data
+	send_spi_data(  gpio_reg, 
+					gpio2_reg, 
+					gpio_in_reg, 
+					spi_config,
+					spi_data );
 
 
 //	free allocated memory
 	spi_data_free(spi_data);
 	free(spi_data);
 	free(spi_config);
+
+	munmap(ptr1,10);
+	munmap(ptr2,10);
 
 	return 0;
 }
