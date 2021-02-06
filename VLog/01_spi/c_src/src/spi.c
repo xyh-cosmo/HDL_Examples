@@ -70,15 +70,6 @@ uint send_spi_data_32bits( 	uint* gpio_reg,
 	uint cpha = spi_config->cpha;
 	uint rst;
 
-//	==============================================
-//	DEBUG
-	uint gpio_reg_4;
-	uint gpio_reg_3;
-	uint gpio_reg_2;
-	uint gpio_reg_1;
-	uint gpio_reg_0;
-//	===============================================
-
 	// step 1: prepare data, just write data into register pointed by gpio2_reg
 	*gpio2_reg = data;
 
@@ -87,17 +78,6 @@ uint send_spi_data_32bits( 	uint* gpio_reg,
 	// *gpio_reg = {A0,A1,cpol,cpha,rst}
 	rst = 0;
 	*gpio_reg = (A0 << 4) + (A1 << 3) + (cpol << 2) + (cpha << 1) + rst;
-	// gpio_reg_4 = get_bit(*gpio_reg, 4);
-	// gpio_reg_3 = get_bit(*gpio_reg, 3);
-	// gpio_reg_2 = get_bit(*gpio_reg, 2);
-	// gpio_reg_1 = get_bit(*gpio_reg, 1);
-	// gpio_reg_0 = get_bit(*gpio_reg, 0);
-	// printf("gpio_reg_4 = %d\n", gpio_reg_4);
-	// printf("gpio_reg_3 = %d\n", gpio_reg_3);
-	// printf("gpio_reg_2 = %d\n", gpio_reg_2);
-	// printf("gpio_reg_1 = %d\n", gpio_reg_1);
-	// printf("gpio_reg_0 = %d\n\n", gpio_reg_0);
-	// print_as_bin(*gpio_reg);
 
 	delay(5);
 
@@ -109,46 +89,17 @@ uint send_spi_data_32bits( 	uint* gpio_reg,
 	rst = 0;
 	*gpio_reg = (A0 << 4) + (A1 << 3) + (cpol << 2) + (cpha << 1) + rst;
 
-	// print_as_bin(*gpio_reg);
-
-	// gpio_reg_4 = get_bit(*gpio_reg, 4);
-	// gpio_reg_3 = get_bit(*gpio_reg, 3);
-	// gpio_reg_2 = get_bit(*gpio_reg, 2);
-	// gpio_reg_1 = get_bit(*gpio_reg, 1);
-	// gpio_reg_0 = get_bit(*gpio_reg, 0);
-
-	// printf("gpio_reg_4 = %d\n", gpio_reg_4);
-	// printf("gpio_reg_3 = %d\n", gpio_reg_3);
-	// printf("gpio_reg_2 = %d\n", gpio_reg_2);
-	// printf("gpio_reg_1 = %d\n", gpio_reg_1);
-	// printf("gpio_reg_0 = %d\n", gpio_reg_0);
-	// print_as_bin(gpio_reg_4);
-	// print_as_bin(gpio_reg_3);
-	// print_as_bin(gpio_reg_2);
-	// print_as_bin(gpio_reg_1);
-	// print_as_bin(gpio_reg_0);
-
-	// exit(0);
-
 	// step 3: wait finish signal send by PL side
 	// int cnt=0, cnt_max = 0xfffffffe;
-	int cnt=0, cnt_max = 0x0000fffe; // 这个时间不能太长或太短
-
-	// print_as_bin(*gpio_in_reg);
-	// delay(10000000);
-	// uint pl_status = get_bit(*gpio_in_reg, 0);
-	// printf(" *gpio_in_reg = 0X%08X\n",*gpio_in_reg);
-	// printf(" pl_status = %d\n", pl_status);
-	// print_as_bin(*gpio_in_reg);
-	// exit(0);
+	int cnt=0, cnt_max = 100;//0x00000fffe; // 这个时间不能太长或太短
 
 	while(1){
 		uint pl_status = get_bit(*gpio_in_reg, 0);
 
 		if( pl_status == 1 ){
-			printf("SPI: successfully send data: 0X%08X\n", data);
-			// return _SPI_SUCCESS_;
-			break;
+			printf("SPI: successfully send data: 0X%08X (cnt = %d)\n", data, cnt);
+			return _SPI_SUCCESS_;
+			// break;
 		}
 		
 		cnt++;
