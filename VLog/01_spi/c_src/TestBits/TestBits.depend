@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1612279081 source:/home/xyh/Desktop/TestBits/main.c
+	<stdio.h>
+	<stdlib.h>
+
