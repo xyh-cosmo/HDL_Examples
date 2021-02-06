@@ -12,10 +12,10 @@
 #include "adc.h"
 
 // SPI settings
-#define CPOL 1
-#define CPHA 0
-#define A0 0
-#define A1 0
+#define CPOL 0
+#define CPHA 1
+#define A0 1
+#define A1 1
 #define SPI_DATA_NUM 11
 
 int ad5628_data[11] = {
