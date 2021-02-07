@@ -86,7 +86,7 @@ uint send_spi_data_32bits( 	uint* gpio_reg,
 	uint A1 = spi_config->A1;
 	uint cpol = spi_config->cpol;
 	uint cpha = spi_config->cpha;
-	uint rst;
+	// uint rst;
 
 	// step 1: prepare data, just write data into register pointed by gpio2_reg
 	*gpio2_reg = data;
@@ -94,22 +94,23 @@ uint send_spi_data_32bits( 	uint* gpio_reg,
 	// step 2: send a pluse to PL via changing state of a specific bit of reg_addr
 	// sizeof(gpio_reg) = 5
 	// *gpio_reg = {A0,A1,cpol,cpha,rst}
-	rst = 0;
-	*gpio_reg = (A0 << 4) + (A1 << 3) + (cpol << 2) + (cpha << 1) + rst;
+	// rst = 0;
+	// *gpio_reg = (A0 << 4) + (A1 << 3) + (cpol << 2) + (cpha << 1) + rst;
+	*gpio_reg = (A0 << 4) + (A1 << 3) + (cpol << 2) + (cpha << 1) + 0;
+	// delay(5);
 
-	delay(5);
+	// rst = 1;
+	// *gpio_reg = (A0 << 4) + (A1 << 3) + (cpol << 2) + (cpha << 1) + rst;
+	*gpio_reg = (A0 << 4) + (A1 << 3) + (cpol << 2) + (cpha << 1) + 1;
+	// delay(5);
 
-	rst = 1;
-	*gpio_reg = (A0 << 4) + (A1 << 3) + (cpol << 2) + (cpha << 1) + rst;
-
-	delay(5);
-
-	rst = 0;
-	*gpio_reg = (A0 << 4) + (A1 << 3) + (cpol << 2) + (cpha << 1) + rst;
+	// rst = 0;
+	// *gpio_reg = (A0 << 4) + (A1 << 3) + (cpol << 2) + (cpha << 1) + rst;
+	*gpio_reg = (A0 << 4) + (A1 << 3) + (cpol << 2) + (cpha << 1) + 0;
 
 	// step 3: wait finish signal send by PL side
-	// int cnt=0, cnt_max = 0xfffffffe;
-	int cnt=0, cnt_max = 100;//0x00000fffe; // 这个时间不能太长或太短
+	int cnt=0, cnt_max = 0xfffffffe;
+	// int cnt=0, cnt_max = 100;//0x00000fffe; // 这个时间不能太长或太短
 
 	while(1){
 		uint pl_status = get_bit(*gpio_in_reg, 0);

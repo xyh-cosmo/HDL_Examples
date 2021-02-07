@@ -8,7 +8,7 @@ int binstr2int(char *str, int *x){
 
 	strncpy(tmp,str,2);
 	if( strcmp(tmp, "0b") == 0 || strcmp(tmp, "0B") == 0 ){
-		memset(tmp,0,sizeof(str));
+		memset(tmp,0,128);
 		strcpy(tmp,str+2);
 	} else {
 		printf("Error: *str = %s\n", str);
