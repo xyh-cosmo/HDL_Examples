@@ -57,7 +57,7 @@ MAIN_2271A	= ConfigLTC2271A.o
 MAIN_2271B	= ConfigLTC2271B.o
 MAIN_READ_BIN	= test_read_bin.o
 
-DEPS	= common.o adc.o spi.o ad5628.o ad9106.o ltc2271.o
+DEPS	= common.o adc.o spi.o misc.o ad5628.o ad9106.o ltc2271.o
 
 all: spi_cfg ad5628 ad9106 ltc2271-a ltc2271-b test_read_bin
 

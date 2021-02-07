@@ -7,12 +7,12 @@
 #include <sys/mman.h>
 #include <math.h>
 
-// #include <stdio.h>
-// #include <stdlib.h>
-// #include <string.h>
-
 #ifndef _COMMON_H_
 #define _COMMON_H_
+
+#define _SUCCESS_	0
+#define _FAILURE_ 	1
+
 
 // on MacOS, clang might not recognize uint
 #ifndef uint
