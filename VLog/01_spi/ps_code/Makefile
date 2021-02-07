@@ -24,8 +24,8 @@ vpath .base build
 
 INCLUDES = -I $(MDIR)/include
 
-CC			= arm-linux-gnueabihf-gcc
-# CC			= gcc
+# CC			= arm-linux-gnueabihf-gcc
+CC			= gcc
 # CC			= gcc-10
 CCFLAG  	= -Wall
 OPTFLAG		= #-O2 #-ffast-math #( not recognized by intel compiler )
