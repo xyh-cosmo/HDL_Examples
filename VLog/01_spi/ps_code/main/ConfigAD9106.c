@@ -1,24 +1,10 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <termios.h>
-#include <sys/mman.h>
-#include <math.h>
-
 #include "common.h"
 #include "spi.h"
 #include "adc.h"
 
-// SPI settings
-#define CPOL 0
-#define CPHA 1
-#define A0 1
-#define A1 1
 #define SPI_DATA_NUM 11
 
-int ad5628_data[11] = {
+int ad9106_data[11] = {
 					0b11111000000000000000000000000001,
 					0b11110100000000000000000011111111,
 					0b11110110000000000000000011111111,
@@ -36,7 +22,7 @@ int main(){
 	
 //	step 1: setup SPI configuration & SPI data
 	SPI_CONFIG *spi_config = (SPI_CONFIG*)malloc(sizeof(SPI_CONFIG));
-	setup_SPI(spi_config, CPOL, CPHA, A0, A1, "AD5628");
+	setup_SPI_by_device_name(spi_config, "ad9106");
 
 	SPI_DATA *spi_data = (SPI_DATA*)malloc(sizeof(SPI_DATA));
 	spi_data_alloc(spi_data, SPI_DATA_NUM);
@@ -45,8 +31,8 @@ int main(){
 	for( idx=0; idx<SPI_DATA_NUM; idx++ ){
 		spi_data_set( 	spi_data, 
 						idx, 
-						(ad5628_data[idx] >> 16), 
-						(ad5628_data[idx] & 0x0000FFFF) 
+						(ad9106_data[idx] >> 16), 
+						(ad9106_data[idx] & 0x0000FFFF) 
 						);
 	}
 

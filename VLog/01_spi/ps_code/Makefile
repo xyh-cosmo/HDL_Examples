@@ -24,8 +24,9 @@ vpath .base build
 
 INCLUDES = -I $(MDIR)/include
 
-CC			= arm-linux-gnueabihf-gcc
-#CC			= gcc
+# CC			= arm-linux-gnueabihf-gcc
+CC			= gcc
+# CC			= gcc-10
 CCFLAG  	= -Wall
 OPTFLAG		= #-O2 #-ffast-math #( not recognized by intel compiler )
 LIBS		= #-lgsl -lgslcblas -lm
@@ -49,16 +50,34 @@ endif
 %.o: %.c .base
 	cd $(WRKDIR);$(CC) $(OMPFLAG) $(OPTFLAG) $(CCFLAG) $(INCLUDES) -c ../$< -o $*.o
 
-MAIN 	= ConfigAD5628.o
-DEPS	= common.o adc.o spi.o
+MAIN_SPICFG = SPI_Config.o
+MAIN_AD5628 = ConfigAD5628.o
+MAIN_AD9106 = ConfigAD9106.o
+MAIN_2271A	= ConfigLTC2271A.o
+MAIN_2271B	= ConfigLTC2271B.o
+MAIN_READ_BIN	= test_read_bin.o
 
-all: ad5628
+DEPS	= common.o adc.o spi.o ad5628.o ad9106.o ltc2271.o
 
-ad5628: ${MAIN} ${DEPS}
+all: spi_cfg ad5628 ad9106 ltc2271-a ltc2271-b test_read_bin
+
+spi_cfg: ${MAIN_SPICFG} ${DEPS}
 	${CC} ${OPTFLAG} ${LDFLAG} $(addprefix build/,$(notdir $^)) ${LIBS} -o $(BINDIR)/$@
 
-#ad5628_test: ${MAIN} ${DEPS}
-#	${CC} ${OPTFLAG} ${LDFLAG} $(addprefix build/,$(notdir $^)) ${LIBS} -o $@
+ad5628: ${MAIN_AD5628} ${DEPS}
+	${CC} ${OPTFLAG} ${LDFLAG} $(addprefix build/,$(notdir $^)) ${LIBS} -o $(BINDIR)/$@
+
+ad9106: ${MAIN_AD9106} ${DEPS}
+	${CC} ${OPTFLAG} ${LDFLAG} $(addprefix build/,$(notdir $^)) ${LIBS} -o $(BINDIR)/$@
+
+ltc2271-a: ${MAIN_2271A} ${DEPS}
+	${CC} ${OPTFLAG} ${LDFLAG} $(addprefix build/,$(notdir $^)) ${LIBS} -o $(BINDIR)/$@
+
+ltc2271-b: ${MAIN_2271B} ${DEPS}
+	${CC} ${OPTFLAG} ${LDFLAG} $(addprefix build/,$(notdir $^)) ${LIBS} -o $(BINDIR)/$@
+
+test_read_bin: ${MAIN_READ_BIN} ${DEPS}
+	${CC} ${OPTFLAG} ${LDFLAG} $(addprefix build/,$(notdir $^)) ${LIBS} -o $(BINDIR)/$@
 
 .PHONY:clean tidy run
 clean: .base

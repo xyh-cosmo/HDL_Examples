@@ -4,8 +4,10 @@
 #define _SPI_H_
 
 #define _SPI_SUCCESS_	0
-#define _SPI_SEND_OK_	0
 #define _SPI_FAILURE_ 	1
+
+// #define _SPI_SEND_OK_	2
+// #define _SPI_SEND_FAILED_ 3
 
 typedef struct{
 	uint cpol;
@@ -29,6 +31,8 @@ uint setup_SPI( SPI_CONFIG * spi_cfg,
 				uint A0,
 				uint A1,
 				char *devname );
+
+uint setup_SPI_by_device_name( SPI_CONFIG * spi_cfg, char *devname );
 
 uint spi_data_alloc( SPI_DATA *spi_data, uint data_size );
 uint spi_data_free( SPI_DATA *spi_data );

@@ -1,0 +1,25 @@
+# AD5628 (CS3--Y3)
+CPOL	= 1
+CPHA	= 0
+A0		= 1
+A1		= 1
+
+# AD9106 (CS1--Y1)
+CPOL	= 1
+CPHA	= 1
+A0		= 1
+A1		= 0
+
+# LTC2271-a (CS2--Y2,U25)
+CPOL	= 1
+CPHA	= 1
+A0		= 0
+A1		= 1
+
+
+# LTC2271-b (CS4--Y0,U26)
+CPOL	= 1
+CPHA	= 1
+A0		= 0
+A1		= 0
+

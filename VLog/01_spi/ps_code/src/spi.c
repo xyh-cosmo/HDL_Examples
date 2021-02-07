@@ -1,5 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "common.h"
 #include "spi.h"
 
@@ -20,6 +18,26 @@ uint setup_SPI( SPI_CONFIG * spi_cfg,
 	printf("> SPI: A0   = %d\n", spi_cfg->A0);
 	printf("> SPI: A1   = %d\n", spi_cfg->A1);
 	return _SPI_SUCCESS_;
+}
+
+uint setup_SPI_by_device_name(	SPI_CONFIG * spi_cfg, 
+								char *devname ){
+	uint status;
+	if( strcmp(devname, "ad5628") == 0 ){
+		status = setup_SPI(spi_cfg,1,0,1,1,"ad5628");
+	} else if( strcmp(devname, "ad9106") == 0 ){
+		status = setup_SPI(spi_cfg,1,1,1,0,"ad9106");
+	} else if( strcmp(devname, "ltc2271-a") == 0 ){
+		status = setup_SPI(spi_cfg,1,1,0,1,"ltc2271-a");
+	} else if( strcmp(devname, "ltc2271-b") == 0 ){
+		status = setup_SPI(spi_cfg,1,1,0,0,"ltc2271-b");
+	} else {
+		printf("Error: failed to configure SPI vai device name \'%s\'\n", devname);
+		printf("==> devname must be one of : ad5628, ad9106, ltc2271-a, ltc2271-b\n");
+		status = _SPI_FAILURE_;
+	}
+
+	return status;
 }
 
 uint spi_data_alloc( SPI_DATA* spi_data, uint data_size ){
@@ -105,7 +123,7 @@ uint send_spi_data_32bits( 	uint* gpio_reg,
 		cnt++;
 
 		if( cnt >= cnt_max ){
-			printf("SPI: cnt exceeds cnt_max = 0xffff, failed to send data\n");
+			printf("SPI: cnt exceeds cnt_max = 0X%08X, failed to send data\n",cnt_max );
 			return _SPI_FAILURE_;
 		}
 	}
@@ -119,12 +137,14 @@ uint send_spi_data( uint* gpio_reg,
 					SPI_DATA *spi_data ){
 	uint i;
 	for( i=0; i<spi_data->size; i++ ){
-		send_spi_data_32bits( 	gpio_reg, 
+		if( _SPI_SUCCESS_ != send_spi_data_32bits( 	gpio_reg, 
 								gpio2_reg,
 								gpio_in_reg, 
 								spi_config,
-								spi_data->reg_addr_val[i] );
+								spi_data->reg_addr_val[i] ) ){
+			return _SPI_FAILURE_;
+		}
 	}
 
-	return _SPI_SEND_OK_;
+	return _SPI_SUCCESS_;
 }
