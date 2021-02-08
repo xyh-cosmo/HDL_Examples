@@ -82,6 +82,7 @@ uint send_spi_data_32bits( 	uint* gpio_reg,
 							SPI_CONFIG *spi_config,
 							uint data ){
 
+	uint AD9106_TRIG = 1;
 	uint A0 = spi_config->A0;
 	uint A1 = spi_config->A1;
 	uint cpol = spi_config->cpol;
@@ -96,17 +97,17 @@ uint send_spi_data_32bits( 	uint* gpio_reg,
 	// *gpio_reg = {A0,A1,cpol,cpha,rst}
 	// rst = 0;
 	// *gpio_reg = (A0 << 4) + (A1 << 3) + (cpol << 2) + (cpha << 1) + rst;
-	*gpio_reg = (A0 << 4) + (A1 << 3) + (cpol << 2) + (cpha << 1) + 0;
+	*gpio_reg = (AD9106_TRIG << 5) + (A0 << 4) + (A1 << 3) + (cpol << 2) + (cpha << 1) + 0;
 	// delay(5);
 
 	// rst = 1;
 	// *gpio_reg = (A0 << 4) + (A1 << 3) + (cpol << 2) + (cpha << 1) + rst;
-	*gpio_reg = (A0 << 4) + (A1 << 3) + (cpol << 2) + (cpha << 1) + 1;
+	*gpio_reg = (AD9106_TRIG << 5) + (A0 << 4) + (A1 << 3) + (cpol << 2) + (cpha << 1) + 1;
 	// delay(5);
 
 	// rst = 0;
 	// *gpio_reg = (A0 << 4) + (A1 << 3) + (cpol << 2) + (cpha << 1) + rst;
-	*gpio_reg = (A0 << 4) + (A1 << 3) + (cpol << 2) + (cpha << 1) + 0;
+	*gpio_reg = (AD9106_TRIG << 5) + (A0 << 4) + (A1 << 3) + (cpol << 2) + (cpha << 1) + 0;
 
 	// step 3: wait finish signal send by PL side
 	int cnt=0, cnt_max = 0x0fffffff;			// 0xfffffffe 的符号位为1,所以实际上是个负数。。。。
