@@ -191,17 +191,17 @@ uint ini_ad9106_cfg_data( int *cfg_data, uint data_size ){
 	// set_ad9106_reg(cfg_data, idx, addr, val, data_size);
 	// idx++;
 
-	// // 0x2C DOUT_START_DLY
-	// addr 	= 0x2C;
-	// val		= 0b1010;
-	// set_ad9106_reg(cfg_data, idx, addr, val, data_size);
-	// idx++;
+	// 0x2C DOUT_START_DLY
+	addr 	= 0x2C;
+	val		= 0x0003;
+	set_ad9106_reg(cfg_data, idx, addr, val, data_size);
+	idx++;
 
-	// // 0x2D DOUT_CONFIG
-	// addr 	= 0x2D;
-	// val		= 0b1010;
-	// set_ad9106_reg(cfg_data, idx, addr, val, data_size);
-	// idx++;
+	// 0x2D DOUT_CONFIG
+	addr 	= 0x2D;
+	val		= 0x0;
+	set_ad9106_reg(cfg_data, idx, addr, val, data_size);
+	idx++;
 
 	// // 0x2E DAC4_CST
 	// addr 	= 0x2E;

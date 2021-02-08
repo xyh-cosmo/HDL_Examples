@@ -70,6 +70,9 @@ int main(){
 					spi_config,
 					ram_data );
 
+//  step 3: trigger wave generation
+	
+
 //	free allocated memory
 	spi_data_free(cfg_data);
 	spi_data_free(ram_data);
@@ -78,8 +81,8 @@ int main(){
 
 	free(spi_config);
 
-	// munmap(ptr1,10);
-	// munmap(ptr2,10);
+	munmap(ptr1,10);
+	munmap(ptr2,10);
 
 	return 0;
 }
