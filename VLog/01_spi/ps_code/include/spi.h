@@ -50,5 +50,12 @@ uint send_spi_data( uint* gpio_reg,
 					SPI_CONFIG *spi_config,
 					SPI_DATA *spi_data );
 
+uint config_via_spi( uint addr, 
+					 uint val, 
+					 SPI_CONFIG *spi_config,
+					 uint* gpio_reg, 
+					 uint* gpio2_reg, 
+					 uint* gpio_in_reg
+					 );
 
 #endif

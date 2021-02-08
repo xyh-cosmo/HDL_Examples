@@ -3,6 +3,7 @@
 #include "adc.h"
 #include "ad5628.h"
 #include "ad9106.h"
+#include "ltc2271.h"
 #include "misc.h"
 
 int main(){
@@ -19,6 +20,7 @@ int main(){
 //  configure AD5628, AD9106 via SPI
 	config_ad5628( gpio_reg, gpio2_reg, gpio_in_reg );
 	config_ad9106( gpio_reg, gpio2_reg, gpio_in_reg );
+	config_ltc2271( gpio_reg, gpio2_reg, gpio_in_reg );
 
 //	start doing the real business
 

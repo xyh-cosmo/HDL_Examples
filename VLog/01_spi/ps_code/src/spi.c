@@ -94,7 +94,7 @@ uint send_spi_data_32bits( 	uint* gpio_reg,
 	// uint rst;
 
 	// step 1: prepare data, just write data into register pointed by gpio2_reg
-	*gpio2_reg = data;
+	*gpio2_reg = data;  // {16bits-addr, 16bits-val}
 
 	// step 2: send a pluse to PL via changing state of a specific bit of reg_addr
 	// sizeof(gpio_reg) = 5
@@ -160,4 +160,17 @@ uint send_spi_data( uint* gpio_reg,
 	}
 
 	return _SPI_SUCCESS_;
+}
+
+
+uint config_via_spi( uint addr, 
+					 uint val, 
+					 SPI_CONFIG *spi_config,
+					 uint* gpio_reg, 
+					 uint* gpio2_reg, 
+					 uint* gpio_in_reg
+					 ){
+	uint data = (addr << 16) + val;
+	uint status = send_spi_data_32bits( gpio_reg, gpio2_reg, gpio_in_reg, spi_config, data);
+	return status;
 }
