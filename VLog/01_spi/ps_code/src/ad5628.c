@@ -8,6 +8,8 @@
 
 uint config_ad5628( uint *gpio_reg, uint *gpio2_reg, uint *gpio_in_reg ){
 
+	printf("==> configuring AD5628\n");
+
 	// uint status;
 
 	int ad5628_data[11] = {
@@ -56,6 +58,8 @@ uint config_ad5628( uint *gpio_reg, uint *gpio2_reg, uint *gpio_in_reg ){
 	spi_data_free(spi_data);
 	free(spi_data);
 	free(spi_config);
+
+	printf("==> finished AD5628 configuration\n");
 
 	return _SPI_SUCCESS_;
 }

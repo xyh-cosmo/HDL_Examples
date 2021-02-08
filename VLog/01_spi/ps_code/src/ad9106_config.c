@@ -15,6 +15,8 @@ void ad9106_trigger_off( uint* gpio_reg ){
 
 uint config_ad9106( uint *gpio_reg, uint *gpio2_reg, uint *gpio_in_reg ){
 
+	printf("==> configuring AD9106\n");
+
 	uint status;
 
 	int ad9106_cfg[SPI_CFG_DATA_NUM] = {0};
@@ -85,6 +87,8 @@ uint config_ad9106( uint *gpio_reg, uint *gpio2_reg, uint *gpio_in_reg ){
 	free(cfg_data);
 	free(ram_data);
 	free(spi_config);
+
+	printf("==> finished AD9106 configuration\n");
 
 	return status;
 }
