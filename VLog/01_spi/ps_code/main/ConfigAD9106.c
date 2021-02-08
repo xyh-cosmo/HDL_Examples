@@ -3,18 +3,18 @@
 #include "adc.h"
 #include "ad9106.h"
 
-#define SPI_CONFIG_NUM 		100
-#define SPI_RAM_DATA_NUM	100
+#define SPI_CFG_DATA_NUM 		128
+#define SPI_RAM_DATA_NUM	4096
 
-int ad9106_cfg[SPI_CONFIG_NUM] = {0};
+int ad9106_cfg[SPI_CFG_DATA_NUM] = {0};
 int ad9106_ram[SPI_RAM_DATA_NUM] = {0};
 
 
 int main(){
 
 //	step 0: prepare configuration & waveform (ram) data
-	ini_ad9106_cfg_data( ad9106_cfg, SPI_CONFIG_NUM );
-	ini_ad9106_ram_data( ad9106_ram, SPI_RAM_DATA_NUM );
+	uint cfg_data_size = ini_ad9106_cfg_data( ad9106_cfg, SPI_CFG_DATA_NUM );
+	uint ram_data_size = ini_ad9106_ram_data( ad9106_ram, SPI_RAM_DATA_NUM );
 
 //	step 1: setup SPI configuration & SPI data
 	SPI_CONFIG *spi_config = (SPI_CONFIG*)malloc(sizeof(SPI_CONFIG));
@@ -23,12 +23,12 @@ int main(){
 	SPI_DATA *cfg_data = (SPI_DATA*)malloc(sizeof(SPI_DATA));
 	SPI_DATA *ram_data = (SPI_DATA*)malloc(sizeof(SPI_DATA));
 
-	spi_data_alloc(cfg_data, SPI_CONFIG_NUM);
-	spi_data_alloc(ram_data, SPI_RAM_DATA_NUM);
+	spi_data_alloc(cfg_data, cfg_data_size);
+	spi_data_alloc(ram_data, ram_data_size);
 
 //	copy cfg_data & ram_data into SPI_DATA structures
 	int idx;
-	for( idx=0; idx<SPI_CONFIG_NUM; idx++ ){
+	for( idx=0; idx<cfg_data_size; idx++ ){
 		spi_data_set( 	cfg_data, 
 						idx, 
 						(ad9106_cfg[idx] >> 16), 
@@ -36,7 +36,7 @@ int main(){
 						);
 	}
 
-	for( idx=0; idx<SPI_RAM_DATA_NUM; idx++ ){
+	for( idx=0; idx<ram_data_size; idx++ ){
 		spi_data_set( 	ram_data, 
 						idx, 
 						(ad9106_ram[idx] >> 16), 
@@ -46,29 +46,29 @@ int main(){
 
 	print_ad9106_cfg_data( ad9106_cfg, 15 );
 
-// //	step 2: create pointers
-// 	int fd = open("/dev/mem", O_RDWR | O_SYNC);
-// 	uint *ptr1 = mmap(NULL, 10, PROT_READ | PROT_WRITE, MAP_SHARED, fd, ADDR_GPIO_OUT);
-// 	uint *ptr2 = mmap(NULL, 10, PROT_READ | PROT_WRITE, MAP_SHARED, fd, ADDR_GPIO_IN);
+//	step 2: create pointers
+	int fd = open("/dev/mem", O_RDWR | O_SYNC);
+	uint *ptr1 = mmap(NULL, 10, PROT_READ | PROT_WRITE, MAP_SHARED, fd, ADDR_GPIO_OUT);
+	uint *ptr2 = mmap(NULL, 10, PROT_READ | PROT_WRITE, MAP_SHARED, fd, ADDR_GPIO_IN);
 
-// 	uint *gpio_reg 		= ptr1;		// 0x41200000
-// 	uint *gpio2_reg		= ptr1+2;	// 0x41200008
-// 	uint *gpio_in_reg	= ptr2;		// 0x41210000
+	uint *gpio_reg 		= ptr1;		// 0x41200000
+	uint *gpio2_reg		= ptr1+2;	// 0x41200008
+	uint *gpio_in_reg	= ptr2;		// 0x41210000
 
 
-// //	step 2: send configuration data
-// 	send_spi_data(  gpio_reg, 
-// 					gpio2_reg, 
-// 					gpio_in_reg, 
-// 					spi_config,
-// 					cfg_data );
+//	step 2: send configuration data
+	send_spi_data(  gpio_reg, 
+					gpio2_reg, 
+					gpio_in_reg, 
+					spi_config,
+					cfg_data );
 
-// //	step 2: send waveform data
-// 	send_spi_data(  gpio_reg, 
-// 					gpio2_reg, 
-// 					gpio_in_reg, 
-// 					spi_config,
-// 					ram_data );
+//	step 2: send waveform data
+	send_spi_data(  gpio_reg, 
+					gpio2_reg, 
+					gpio_in_reg, 
+					spi_config,
+					ram_data );
 
 //	free allocated memory
 	spi_data_free(cfg_data);
