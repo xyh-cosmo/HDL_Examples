@@ -24,12 +24,11 @@ vpath .base build
 
 INCLUDES = -I $(MDIR)/include
 
-# CC			= arm-linux-gnueabihf-gcc
-CC			= gcc
-# CC			= gcc-10
+CC			= arm-linux-gnueabihf-gcc
+# CC			= gcc
 CCFLAG  	= -Wall
 OPTFLAG		= #-O2 #-ffast-math #( not recognized by intel compiler )
-LIBS		= #-lgsl -lgslcblas -lm
+LIBS		= -lm #-lgsl -lgslcblas 
 LDFLAG      = 
 
 #   http://www.tuicool.com/articles/NBfeYj
