@@ -71,6 +71,13 @@ int main(){
 					ram_data );
 
 //  step 3: trigger wave generation
+	uint AD9106_TRIG_MASK_BIT = 5;
+
+	*gpio_reg |= (1 << AD9106_TRIG_MASK_BIT);
+
+	usleep(10);
+
+	*gpio_reg &= ~(1 << AD9106_TRIG_MASK_BIT);
 	
 
 //	free allocated memory
