@@ -6,13 +6,13 @@
 
 // 修改gpio_reg[5]
 void ad9106_trigger_on( uint* gpio_reg ){
-	// *gpio_reg |= (1 << AD9106_TRIG_MASK_BIT);
-	clrbit(*gpio_reg,AD9106_TRIG_MASK_BIT);
+	*gpio_reg &= ~(1 << AD9106_TRIG_MASK_BIT);
+	// clrbit(*gpio_reg,AD9106_TRIG_MASK_BIT);
 }
 
 void ad9106_trigger_off( uint* gpio_reg ){
-	// *gpio_reg &= ~(1 << AD9106_TRIG_MASK_BIT);
-	setbit(*gpio_reg,AD9106_TRIG_MASK_BIT);
+	*gpio_reg |= (1 << AD9106_TRIG_MASK_BIT);
+	// setbit(*gpio_reg,AD9106_TRIG_MASK_BIT);
 }
 
 uint config_ad9106( uint *gpio_reg, uint *gpio2_reg, uint *gpio_in_reg ){
@@ -27,6 +27,8 @@ uint config_ad9106( uint *gpio_reg, uint *gpio2_reg, uint *gpio_in_reg ){
 	//	step 0: prepare configuration & waveform (ram) data
 	uint cfg_data_size = ini_ad9106_cfg_data( ad9106_cfg, SPI_CFG_DATA_NUM );
 	uint ram_data_size = ini_ad9106_ram_data( ad9106_ram, SPI_RAM_DATA_NUM );
+	// exit(0);
+
 
 //	step 1: setup SPI configuration & SPI data
 	SPI_CONFIG *spi_config = (SPI_CONFIG*)malloc(sizeof(SPI_CONFIG));
@@ -68,6 +70,8 @@ uint config_ad9106( uint *gpio_reg, uint *gpio2_reg, uint *gpio_in_reg ){
 	if( status != _SPI_SUCCESS_ ){
 		printf("Error: failed to configure AD9106 via SPI!\n");
 		exit(0);
+	} else {
+		printf("==> AD9106: finished sending configuration data to registers.\n");
 	}
 
 //	step 2: send waveform data
@@ -80,6 +84,8 @@ uint config_ad9106( uint *gpio_reg, uint *gpio2_reg, uint *gpio_in_reg ){
 	if( status != _SPI_SUCCESS_ ){
 		printf("Error: failed to write waveform into AD9106 SRAM via SPI!\n");
 		exit(0);
+	} else {
+		printf("==> AD9106: finished sending waveform data to SRAM.\n");
 	}
 
 //	free allocated memory

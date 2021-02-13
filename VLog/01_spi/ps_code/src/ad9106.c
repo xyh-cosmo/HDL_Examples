@@ -434,6 +434,8 @@ uint ini_ad9106_cfg_data( int *cfg_data, uint data_size ){
 	set_ad9106_reg(cfg_data, idx, addr, val, data_size);
 	idx++;
 
+	printf("==> AD9106: updated %3d configure iterms\n", idx);
+
 	return idx;
 }
 
@@ -445,6 +447,8 @@ uint ini_ad9106_cfg_data( int *cfg_data, uint data_size ){
 //
 uint ini_ad9106_ram_data( int *ram_data, uint data_size ){
 
+	printf("==> AD9106: start initializing SRAM\n");
+
 	uint addr, val;
 	uint idx = 0;
 
@@ -455,9 +459,11 @@ uint ini_ad9106_ram_data( int *ram_data, uint data_size ){
 		double x = cnt*2*pi/4095;
 		double y = sin(x)+1.001;
 		val = (int)( y/2.001 * (pow(2,8)-1) );
-		*(ram_data+addr) = (addr << 16) + (val << 4);
+		*(ram_data+cnt) = (addr << 16) + (val << 4);
 		cnt++;
 	}
+
+	printf("==> AD9106: initializing SRAM is done.\n");
 
 	return idx;
 }

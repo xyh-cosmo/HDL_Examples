@@ -16,6 +16,12 @@ int main(){
 
 	config_ad9106( gpio_reg, gpio2_reg, gpio_in_reg );
 
+	ad9106_trigger_on(gpio_reg);
+
+	// sleep(30);
+
+	// ad9106_trigger_off(gpio_reg);
+
 	munmap(ptr1,10);
 	munmap(ptr2,10);
 
