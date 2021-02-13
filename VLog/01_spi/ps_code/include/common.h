@@ -13,7 +13,11 @@
 #define _SUCCESS_	0
 #define _FAILURE_ 	1
 
+// bit operations
+#define setbit(x,y)  x|=(1<<y)
+#define clrbit(x,y)  x&=~(1<<y)
 #define reversebit(x,y) x^=(1<<y)
+#define getbit(x,y)   ((x) >> (y)&1)
 
 // on MacOS, clang might not recognize uint
 #ifndef uint

@@ -6,11 +6,13 @@
 
 // 修改gpio_reg[5]
 void ad9106_trigger_on( uint* gpio_reg ){
-	*gpio_reg |= (1 << AD9106_TRIG_MASK_BIT);
+	// *gpio_reg |= (1 << AD9106_TRIG_MASK_BIT);
+	clrbit(*gpio_reg,AD9106_TRIG_MASK_BIT);
 }
 
 void ad9106_trigger_off( uint* gpio_reg ){
-	*gpio_reg &= ~(1 << AD9106_TRIG_MASK_BIT);
+	// *gpio_reg &= ~(1 << AD9106_TRIG_MASK_BIT);
+	setbit(*gpio_reg,AD9106_TRIG_MASK_BIT);
 }
 
 uint config_ad9106( uint *gpio_reg, uint *gpio2_reg, uint *gpio_in_reg ){

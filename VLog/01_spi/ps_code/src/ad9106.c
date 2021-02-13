@@ -82,25 +82,25 @@ uint ini_ad9106_cfg_data( int *cfg_data, uint data_size ){
 
 	// 0x09 DAC4RSET
 	addr 	= 0x09;
-	val		= 0b1110000011101111;
+	val		= 0b1111111111101111;
 	set_ad9106_reg(cfg_data, idx, addr, val, data_size);
 	idx++;
 
 	// 0x0A DAC3RSET
 	addr 	= 0x0A;
-	val		= 0b1110000011101111;
+	val		= 0b1111111111101111;
 	set_ad9106_reg(cfg_data, idx, addr, val, data_size);
 	idx++;
 
 	// 0x0B DAC2RSET
 	addr 	= 0x0B;
-	val		= 0b1110000011101111;
+	val		= 0b1111111111101111;
 	set_ad9106_reg(cfg_data, idx, addr, val, data_size);
 	idx++;
 
 	// 0x0C DAC1RSET
 	addr 	= 0x0C;
-	val		= 0b1110000011101111;
+	val		= 0b1111111111101111;
 	set_ad9106_reg(cfg_data, idx, addr, val, data_size);
 	idx++;
 
@@ -123,6 +123,7 @@ uint ini_ad9106_cfg_data( int *cfg_data, uint data_size ){
 	idx++;
 
 	// 0x1F PAT_TYPE
+	// NOTE:在测试阶段，零时将PATTERN_RPT设置为0，一直输出波形
 	addr 	= 0x1F;
 	val		= 0b1111111111111110;
 	set_ad9106_reg(cfg_data, idx, addr, val, data_size);
@@ -134,6 +135,7 @@ uint ini_ad9106_cfg_data( int *cfg_data, uint data_size ){
 	set_ad9106_reg(cfg_data, idx, addr, val, data_size);
 	idx++;
 
+	// NOTE：暂时将4个通道的OFFSET全部设置为0
 	// 0x22 DAC4DOF
 	addr 	= 0x22;
 	val		= 0b0000000000001111;
@@ -230,6 +232,7 @@ uint ini_ad9106_cfg_data( int *cfg_data, uint data_size ){
 	// set_ad9106_reg(cfg_data, idx, addr, val, data_size);
 	// idx++;
 
+	// 四个通道的增益设置为默认值
 	// 0x32 DAC4_DGAIN
 	addr 	= 0x32;
 	val		= 0b0000000000001111;
@@ -334,7 +337,7 @@ uint ini_ad9106_cfg_data( int *cfg_data, uint data_size ){
 	set_ad9106_reg(cfg_data, idx, addr, val, data_size);
 	idx++;
 
-	// 0x52 STOP_ADDR3
+	// 0x52 STOP_ADDR4
 	addr 	= 0x52;
 	val		= 0b1111111111101111;
 	set_ad9106_reg(cfg_data, idx, addr, val, data_size);
