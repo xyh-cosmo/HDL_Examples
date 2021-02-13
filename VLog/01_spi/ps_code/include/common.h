@@ -13,6 +13,7 @@
 #define _SUCCESS_	0
 #define _FAILURE_ 	1
 
+#define reversebit(x,y) x^=(1<<y)
 
 // on MacOS, clang might not recognize uint
 #ifndef uint

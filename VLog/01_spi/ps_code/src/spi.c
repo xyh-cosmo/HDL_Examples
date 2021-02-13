@@ -15,7 +15,7 @@ uint setup_SPI( SPI_CONFIG * spi_cfg,
 	sprintf(spi_cfg->devname, "%s", devname);
 	printf("SPI configuration for device: %s\n", spi_cfg->devname);
 	printf("> SPI: CPOL = %d\n", spi_cfg->cpol);
-	printf("> SPI: CPOL = %d\n", spi_cfg->cpol);
+	printf("> SPI: CPHA = %d\n", spi_cfg->cpha);
 	printf("> SPI: A0   = %d\n", spi_cfg->A0);
 	printf("> SPI: A1   = %d\n", spi_cfg->A1);
 	return _SPI_SUCCESS_;
@@ -26,6 +26,7 @@ uint setup_SPI_by_device_name(	SPI_CONFIG * spi_cfg,
 	uint status;
 	if( strcmp(devname, "ad5628") == 0 ){
 		status = setup_SPI(spi_cfg,1,0,1,1,"ad5628");
+		// status = setup_SPI(spi_cfg,1,0,1,0,"ad5628");
 	} else if( strcmp(devname, "ad9106") == 0 ){
 		status = setup_SPI(spi_cfg,1,1,1,0,"ad9106");
 	} else if( strcmp(devname, "ltc2271-a") == 0 ){
@@ -39,6 +40,13 @@ uint setup_SPI_by_device_name(	SPI_CONFIG * spi_cfg,
 	}
 
 	return status;
+}
+
+//	将A0,A1取反，改变CS的状态，这对于AD5628而言是必要的，在每次写入数据之前，需要将CS拉高至少15ns
+void update_CS( uint* gpio_reg ){
+	// *gpio_reg = (A0 << 4) + (A1 << 3) + (cpol << 2) + (cpha << 1) + rst;
+	reversebit(*gpio_reg,4);
+	reversebit(*gpio_reg,3);
 }
 
 uint spi_data_alloc( SPI_DATA* spi_data, uint data_size ){
@@ -105,7 +113,7 @@ uint send_spi_data_32bits( 	uint* gpio_reg,
 				+ (A0 << 4) + (A1 << 3) 
 				+ (cpol << 2) + (cpha << 1) 
 				+ 0;
-	delay(10);
+	// delay(10);
 
 	// rst = 1;
 	// *gpio_reg = (A0 << 4) + (A1 << 3) + (cpol << 2) + (cpha << 1) + rst;
@@ -140,6 +148,9 @@ uint send_spi_data_32bits( 	uint* gpio_reg,
 			return _SPI_FAILURE_;
 		}
 	}
+
+	// delay(100);
+
 	return _SPI_SUCCESS_;
 }
 
@@ -148,8 +159,15 @@ uint send_spi_data( uint* gpio_reg,
 					uint* gpio_in_reg, 
 					SPI_CONFIG *spi_config,
 					SPI_DATA *spi_data ){
+
+
 	uint i;
 	for( i=0; i<spi_data->size; i++ ){
+
+		update_CS( gpio_reg );		
+		delay(5);	// 对于AD5628而言，开始写入数据之前，需要将CS拉高至少15ns
+		update_CS( gpio_reg );
+
 		if( _SPI_SUCCESS_ != send_spi_data_32bits( 	gpio_reg, 
 								gpio2_reg,
 								gpio_in_reg, 
