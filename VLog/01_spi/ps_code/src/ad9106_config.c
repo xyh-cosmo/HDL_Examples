@@ -1,4 +1,6 @@
 //	NOTE: all reserved bits are set to 1.
+//	在通过SPI传输数据的过程中，默认将AD9106的trigger关闭了（即设为1），因此在实际使用
+//	AD9106产生波形的时候，需要手动修改对应寄存器中的对应bit位，实现trigger的开和关。
 
 #include "common.h"
 #include "spi.h"

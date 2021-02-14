@@ -141,6 +141,15 @@ module SPI_BASE
 						clk_cnt <= clk_cnt + 8'b1;
 				end
 			end
+			else begin
+			//	根据时钟极性设置空闲状态下的SCLK
+			//	NOTE:在测试AD9106时发现缺少下面代码后，在某些SPI时钟配置下，一次数据传输之后，sclk没有
+			//	处在应该在的逻辑电平
+				if( CPOL == 0 )
+					sclk_r	<= 1'b0;
+				else if( CPOL == 1)
+					sclk_r  <= 1'b1;
+			end
 		end
 	end
 
