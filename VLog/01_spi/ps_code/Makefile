@@ -34,10 +34,13 @@ LDFLAG      =
 #   http://www.tuicool.com/articles/NBfeYj
 ifeq ($(shell uname -s),Linux)
 	LDFLAG	+= -Wl,--no-as-needed
+	CC			= arm-linux-gnueabihf-gcc
+# 	CC			= gcc
 endif
 
 ifeq ($(shell uname -s),Darwin)
 	LDFLAG	+= -framework Accelerate #(-framework Accelerate is for Mac OSX)
+	CC		= gcc
 endif
 
 #%.o: %.cpp .base
